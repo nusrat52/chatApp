@@ -1,4 +1,4 @@
-let users = [];
+let users = []
 
 const addUser = ({ username, room, id }) => {
   username = username.trim().toLowerCase();
@@ -23,11 +23,12 @@ const addUser = ({ username, room, id }) => {
 
 const removeUser = (id) => {
   let removed;
-  users = users.filter((user, index) => {
+  users = users.filter((user) => {
     if (user.id === id) {
       removed = user;
       return false;
     }
+    return true
   });
   return removed;
 };
@@ -51,5 +52,8 @@ const getUsersInRoom = (room) => {
 
   return userArr;
 };
+
+
+
 
 module.exports = { getUsersInRoom, getUser, removeUser, addUser };

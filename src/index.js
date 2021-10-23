@@ -48,18 +48,27 @@ io.on("connection", (socket) => {
 
   socket.on("submit", (value, cb) => {
     const user = getUser(socket.id);
-
-    io.to(user.room).emit("message", {
+if(user){
+  io.to(user.room).emit("message", {
+      
       message: value,
       date: Date.now(),
       name: user.username,
     });
+    io.to(user.room).emit("sidebar", {
+      room: user.room,
+      sbData: getUsersInRoom(user.room),
+    });
 
+}
     cb();
   });
 
   socket.on("posi", ({ lat, long }, callback) => {
+
     const user = getUser(socket.id);
+
+if(user){
     io.to(user.room).emit("Locationmessage", {
       message: `https://google.com/maps?q=${lat},${long}`,
       date: Date.now(),
@@ -67,6 +76,8 @@ io.on("connection", (socket) => {
     });
 
     callback("just mesaj");
+}
+
   });
 
   socket.on("disconnect", () => {
@@ -76,8 +87,10 @@ io.on("connection", (socket) => {
         message: user.username + " was left",
         date: Date.now(),
       });
+
+
+      io.to(user.room).emit("sidebar")
     }
-    io.to(user.room).emit("sidebar")
   });
 
 });
